@@ -1,4 +1,5 @@
-<title>Test</title>
+title: TEST
+---
 
 ### Latest Blog Posts
 
