@@ -1,5 +1,5 @@
 ---
-title:  "Welcome to Jekyll!"
+title: "Home"
 ---
 
 ### Latest Blog Posts
