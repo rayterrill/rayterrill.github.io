@@ -1,4 +1,5 @@
-title: TEST
+---
+title:  "Welcome to Jekyll!"
 ---
 
 ### Latest Blog Posts
