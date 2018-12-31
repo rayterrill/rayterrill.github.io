@@ -3,12 +3,7 @@
 
 @import "{{ site.theme }}";
 
+// override the a:hover and a:focus to stop making the font bold
 a:hover, a:focus {
-   color: purple;
    font-weight: normal;
 }
-
-.nolinkhover {
-   color: red;
-}
-
