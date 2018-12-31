@@ -3,6 +3,6 @@
 
 @import "{{ site.theme }}";
 
-.nolinkhover {
-   color:#069;
+.nolinkhover a:hover {
+   color: red;
 }
