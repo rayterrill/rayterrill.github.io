@@ -14,7 +14,7 @@
   <body>
     <div class="wrapper">
       <header>
-        <h1><a class="header" href="{{ "/" | absolute_url }}">{{ site.title | default: site.github.repository_name }}</a></h1>
+        <h1><a href="{{ "/" | absolute_url }}">{{ site.title | default: site.github.repository_name }}</a></h1>
         
         {% if site.logo %}
           <img src="{{site.logo | relative_url}}" alt="Logo" />
@@ -29,7 +29,7 @@
         <p>
         {% for tag in site.tags %}
         <!-- Here's a hack to generate a "tag cloud" where the size of the word is directly proportional to the number of posts with that tag. -->
-        <a href="/tags/{{ tag[0] }}/" style="font-size: {{ tag[1] | size | times: 2 | plus: 10 }}px">
+        <a class="tagcloud" href="/tags/{{ tag[0] }}/" style="font-size: {{ tag[1] | size | times: 2 | plus: 10 }}px">
         {{ tag[0] }} | 
         </a>
         {% endfor %}
