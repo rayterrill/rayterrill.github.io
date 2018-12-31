@@ -1,5 +1,6 @@
 ---
 title:  "API Gateway with Multiple Deployments"
+tags: [aws, apigateway]
 ---
 
 Our team has decided to embark on a conversion process, where we're planning to migrate a NodeJS + MongoDB API running in EC2 and surfaced via API Gateway to a new Serverless NodeJS using Lambda, DynamoDB, and API Gateway.
