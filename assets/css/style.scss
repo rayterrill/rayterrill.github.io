@@ -9,7 +9,7 @@ a:hover, a:focus {
 }
 
 //allow the header to make the font bold
-.header a:hover {
+a.header:hover, a.header:focus {
    font-weight: bold;
    color: red;
 }
