@@ -3,8 +3,9 @@
 
 @import "{{ site.theme }}";
 
-.nolinkhover a:hover, a:focus {
+a:hover, a:focus {
    color: purple;
+   font-weight: normal;
 }
 
 .nolinkhover {
