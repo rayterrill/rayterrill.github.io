@@ -75,7 +75,8 @@ tags: [hot, summer]
 Drafts go in the _drafts folder without a date in the filename
 
 ##### Escaping Jekyll Code (for Documenting Jekyll Code Itself)
-Wrap code with {% raw %} and {% endraw %} tags like the following:
+Wrap code with raw endraw tags like the following:
+![escapingJekyll]({{ site.url }}/assets/escapingJekyll.png)
 
 ### Tags and Tag Clouds with Jekyll
 https://dev.to/rpalo/jekyll-tags-the-easy-way
