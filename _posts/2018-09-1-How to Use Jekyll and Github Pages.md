@@ -5,7 +5,7 @@ tags: [jekyll, github]
 
 I had a hell of a time trying to get Github Pages going with the Jekyll support. The basics are pretty easy to get going, but I couldn't get some of the more "advanced" features going without digging around. This is my attempt at documenting some of those learnings.
 
-This page has been an excellent resource: https://jekyllrb.com/docs/
+This page has been an excellent resource: [https://jekyllrb.com/docs/](https://jekyllrb.com/docs/)
 
 ##### Configuring Global Settings for Jekyll/Github Pages
 Global configuration goes in the _config.yml file at the root of the repo. Stuff like the global theme configuration, title, author, etc go in here.
@@ -80,4 +80,4 @@ Wrap code with raw endraw tags like the following:
 ![escapingJekyll]({{ site.url }}/assets/escapingJekyll.png)
 
 ### Tags and Tag Clouds with Jekyll
-https://dev.to/rpalo/jekyll-tags-the-easy-way
+[https://dev.to/rpalo/jekyll-tags-the-easy-way](https://dev.to/rpalo/jekyll-tags-the-easy-way)
