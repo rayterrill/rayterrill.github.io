@@ -45,6 +45,7 @@ tags: [hot, summer]
 
 ##### Iterating Tags or Categories
 ```
+{% raw  %}
 {% for category in site.categories %}
   <h3>{{ category[0] }}</h3>
   <ul>
@@ -53,6 +54,7 @@ tags: [hot, summer]
     {% endfor %}
   </ul>
 {% endfor %}
+{% endraw %}
 ```
 
 ##### Creating a List of Posts and Excerpts
