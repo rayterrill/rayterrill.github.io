@@ -59,6 +59,7 @@ tags: [hot, summer]
 
 ##### Creating a List of Posts and Excerpts
 ```
+{% raw  %}
 <ul>
   {% for post in site.posts %}
     <li>
@@ -67,7 +68,25 @@ tags: [hot, summer]
     </li>
   {% endfor %}
 </ul>
+{% endraw %}
 ```
 
 ##### Drafts
 Drafts go in the _drafts folder without a date in the filename
+
+##### Escaping Jekyll Code (for Documenting Jekyll Code Itself)
+Wrap code with {% raw %} and {% endraw %} tags like the following:
+```
+{% raw %}
+{% raw %}
+<ul>
+  {% for post in site.posts %}
+    <li>
+      <a href="{{ post.url }}">{{ post.title }}</a>
+      {{ post.excerpt }}
+    </li>
+  {% endfor %}
+</ul>
+{% endraw %}
+```
+{% endraw %}
