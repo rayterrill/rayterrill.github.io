@@ -1,6 +1,6 @@
 ---
 title:  "How to Use Jekyll and Github Pages"
-tags: [hot, summer]
+tags: [jekyll, github]
 ---
 
 I had a hell of a time trying to get Github Pages going with the Jekyll support. The basics are pretty easy to get going, but I couldn't get some of the more "advanced" features going without digging around. This is my attempt at documenting some of those learnings.
