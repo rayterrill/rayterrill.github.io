@@ -76,20 +76,6 @@ Drafts go in the _drafts folder without a date in the filename
 
 ##### Escaping Jekyll Code (for Documenting Jekyll Code Itself)
 Wrap code with {% raw %} and {% endraw %} tags like the following:
-```
-{% raw %}
-{% raw %}
-<ul>
-  {% for post in site.posts %}
-    <li>
-      <a href="{{ post.url }}">{{ post.title }}</a>
-      {{ post.excerpt }}
-    </li>
-  {% endfor %}
-</ul>
-{% endraw %}
-```
-{% endraw %}
 
 ### Tags and Tag Clouds with Jekyll
 https://dev.to/rpalo/jekyll-tags-the-easy-way
