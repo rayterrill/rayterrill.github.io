@@ -1,5 +1,6 @@
 ---
 title:  "Getting Github Auto-Deployments Working with AWS CodeDeploy, API Gateway, and Lambda"
+tags: [github, aws, apigateway, serverless]
 ---
 
 NOTE: This assumes that you already have a functional and tested CodeDeploy process built out, and a branch that you want to push with CodeDeploy (i.e. AddCodeDeploy in this example).
