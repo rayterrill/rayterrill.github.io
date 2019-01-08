@@ -3,7 +3,7 @@ title:  "ExpressJS Vary CORS Allowed Origins by Requesting Origin"
 tags: [aws, webdev, nodejs]
 ---
 
-We use Cloudfront Signed Cookies (https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/private-content-signed-cookies.html) to provide secure access to JSON documents stored in S3. The cookies are provisioned by a small webservice that was initially rolled out for a single web application (a great topic for another blog post), but was found to be so useful we used it for a bunch of apps. Unfortunately, we quickly ran into the "cross domain cookie" issue, where the browser will silently drop cookies set via AJAX from a subdomain unless requested with withCredentials, which subsequently requires that the origin not be set to "*". Here's how we solved that with our NodeJS microservice.
+We use Cloudfront Signed Cookies ([https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/private-content-signed-cookies.html](https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/private-content-signed-cookies.html)) to provide secure access to JSON documents stored in S3. The cookies are provisioned by a small webservice that was initially rolled out for a single web application (a great topic for another blog post), but was found to be so useful we used it for a bunch of apps. Unfortunately, we quickly ran into the "cross domain cookie" issue, where the browser will silently drop cookies set via AJAX from a subdomain unless requested with withCredentials, which subsequently requires that the origin not be set to "*". Here's how we solved that with our NodeJS microservice.
 
 ### Initial Code - Using Express Application-level Middleware to Set our Headers
 ```
