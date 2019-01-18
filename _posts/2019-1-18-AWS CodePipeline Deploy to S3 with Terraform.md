@@ -185,8 +185,6 @@ EOF
 
 #attach the policy to the service role
 resource "aws_iam_role_policy_attachment" "AWSCodePipelineServiceRole-us-west-2-github" {
-  provider = "aws.lab"
-
   role       = "${aws_iam_role.AWSCodePipelineServiceRole-us-west-2-github.name}"
   policy_arn = "${aws_iam_policy.AWSCodePipelineServiceRole-us-west-2-github.arn}"
 }
@@ -196,8 +194,6 @@ resource "aws_iam_role_policy_attachment" "AWSCodePipelineServiceRole-us-west-2-
 ```
 #build the bucket for our codepipeline artifacts
 resource "aws_s3_bucket" "codepipeline-us-west-2-myartifacts" {
-  provider = "aws.lab"
-
   bucket = "codepipeline-us-west-2-myartifacts"
   acl    = "private"
 }
