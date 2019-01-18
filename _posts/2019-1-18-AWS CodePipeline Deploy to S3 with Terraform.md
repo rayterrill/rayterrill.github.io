@@ -1,9 +1,11 @@
 ---
-title:  "AWS CodePipeline with Terraform"
+title:  "AWS CodePipeline Deploy to S3 with Terraform"
 tags: [aws, terraform]
 ---
 
 AWS recently released support for deploying to S3 with CodePipeline [https://aws.amazon.com/about-aws/whats-new/2019/01/aws-codepipeline-now-supports-deploying-to-amazon-s3/](https://aws.amazon.com/about-aws/whats-new/2019/01/aws-codepipeline-now-supports-deploying-to-amazon-s3/).
+
+This fits in perfectly with the work we've been doing to move things to Serverless, but we wanted to make sure we keep things consistent across our accounts, which we currently do with Terraform.
 
 #### Build the supporting pieces CodePipeline needs to deploy code (a iam policy, role, and the policy attachment to that role):
 ```
