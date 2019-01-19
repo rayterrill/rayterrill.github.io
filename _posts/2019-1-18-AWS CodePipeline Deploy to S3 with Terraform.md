@@ -279,7 +279,7 @@ resource "aws_codepipeline_webhook" "webhook" {
 
 # Wire the CodePipeline webhook into a GitHub repository.
 resource "github_repository_webhook" "webhook" {
-  repository = "webhook"
+  repository = "MyRepo"
 
   name = "web"
 
