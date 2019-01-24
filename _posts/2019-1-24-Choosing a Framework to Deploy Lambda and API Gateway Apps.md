@@ -16,15 +16,15 @@ Pros:
 - Developers were very responsive to questions
 
 Cons:
-- The documentation is not great. A number of caveats and design decisions are documented, but not easily accessible. We did eventually find them, after we had stumbled across a limitation.
-- The framework is very opinionated. There is a one-to-one relationship between a ClaudaJS function and an API - no ability to map functions to individual functions to individual methods within an API. We found this very limiting.
-- The proxyAPI functionality does not include the ability to require API keys.
+- The documentation is not great. A number of caveats and design decisions are documented, but not easily accessible. We did eventually find them, but only after we had stumbled across a limitation.
+- The framework is fairly opinionated. There is a one-to-one relationship between a ClaudaJS function and an API - no ability to map individual functions to methods within an API. We found this very limiting.
+- The proxyAPI functionality does not include the ability to require API keys. This meant manual configuration outside of Claudia in order to complete a deployment.
 - No mechanism to handle custom domains/base path mappings - must be handled outside the tool
-- Configuration appears to be command-line based, as opposed to using a config file. This makes it a little difficult to get things going with junior devs
+- Configuration appears to be command-line parameter based, as opposed to using a config file. This makes it a little difficult to get things going with junior devs and ensure repeatable deployments.
 
 ### Serverless Framework
 
-After running into issues with ClaudiaJS, we pivoted our efforts over to Serverless Framework. As with ClaudiaJS, we were able to pretty quickly get things deployed using the examples. We also were able to get some more advanced things going with a little trial and error. At this point, we've been able to deploy our code to PROD, and we have not encountered any insurmountable issues.
+After running into the issues with ClaudiaJS, we pivoted our efforts over to Serverless Framework. As with ClaudiaJS, we were able to pretty quickly get things deployed using the examples. We also were able to get some more advanced things going with a little trial and error. At this point, we've been able to deploy our code to PROD, and we have not encountered any insurmountable issues.
 
 Pros:
 - Pretty simple to get started
