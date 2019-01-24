@@ -1,5 +1,5 @@
 ---
-title:  "Deploying Lambda and API Gateway Apps."
+title:  "Choosing a Framework to Deploy Lambda and API Gateway Apps"
 tags: [aws, apigateway, serverless]
 ---
 
