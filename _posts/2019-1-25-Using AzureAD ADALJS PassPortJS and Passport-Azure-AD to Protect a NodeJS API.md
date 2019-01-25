@@ -7,7 +7,7 @@ We have a few NodeJS APIs we're looking to protect with AzureAD, our chosen iden
 
 ### Front End ADAL Config to Use MS Graph
 
-The front end was pretty easy to get working in a proof-of-concept. I ended up taking the Microsoft SPA example and simplifying it some, publishing that work here: (https://github.com/rayterrill/AzureADADALv1Example)[https://github.com/rayterrill/AzureADADALv1Example].
+The front end was pretty easy to get working in a proof-of-concept. I ended up taking the Microsoft SPA example and simplifying it some, publishing that work here: [https://github.com/rayterrill/AzureADADALv1Example](https://github.com/rayterrill/AzureADADALv1Example).
 
 Where things became tricky for me was trying to understand how we needed to request tokens to access APIs from our client-side app. It appears through reading the documentation and some trial and error that we need to set the resource in the authContext.acquireToken function to the service we need the token for, which makes sense.
 
@@ -38,7 +38,7 @@ $.ajax({
 });
 ```
 
-I ended up building a pretty simple VueJS app (https://github.com/rayterrill/MSGraphVueJSDashboard)[(https://github.com/rayterrill/MSGraphVueJSDashboard] to illustrate how this works in full practice.
+I ended up building a pretty simple VueJS app [https://github.com/rayterrill/MSGraphVueJSDashboard](https://github.com/rayterrill/MSGraphVueJSDashboard) to illustrate how this works in full practice.
 
 ### Calling into Our Own NodeJS API
 
@@ -129,4 +129,4 @@ $.ajax({
 });
 ```
 
-I published a functional example of the Express/NodeJS API here: (https://github.com/rayterrill/ExpressPassportAzureADAPIExample)[https://github.com/rayterrill/ExpressPassportAzureADAPIExample]
+I published a functional example of the Express/NodeJS API here: [https://github.com/rayterrill/ExpressPassportAzureADAPIExample](https://github.com/rayterrill/ExpressPassportAzureADAPIExample)
