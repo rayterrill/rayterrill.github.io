@@ -15,5 +15,4 @@ Things we wanted from the solution:
 * HTTPS for web services with no manual steps required (no manual cert provisioning or mapping)
 * "Dynamic" DNS (no manual DNS changes required to put a solution into PROD).
 
-This is what we came up with.
-![ConsulNomadTraefikJenkinsDiagram]({{ site.url }}/assets/ConsulNomadTraefikJenkins.PNG)
+This is what we came up with (click the link for the larger image): <a href="/assets/ConsulNomadTraefikJenkins.PNG"><img src="/assets/ConsulNomadTraefikJenkins.PNG"/></a>
