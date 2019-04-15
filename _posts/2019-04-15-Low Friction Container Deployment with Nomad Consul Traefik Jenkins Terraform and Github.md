@@ -16,3 +16,12 @@ Things we wanted from the solution:
 * "Dynamic" DNS (no manual DNS changes required to put a solution into PROD).
 
 This is what we came up with (click the link for the larger image): <a href="/assets/ConsulNomadTraefikJenkins.PNG"><img src="/assets/ConsulNomadTraefikJenkins.PNG"/></a>
+
+An explanation of the magic:
+1. Our DNS is configured with a *.services.ourdomain.com record pointing at the IP address of our Traefik load balancer (currently just a single VM for now, with a TODO to look at clustering this or moving this into a Docker container in the future)
+2. Traefik is configured with a *.services.outdomain.com wildcard certificate.
+3. Jenkins grabs commits via the webhook from Github, builds a container, and uses Terraform to tell Nomad to reload the new container.
+
+The end result is that developers can build and test their apps locally, and when they commit their changes to Github they can be built and deployed to end users without needing to manually configure certificates or DNS.
+
+Hit me up on Twitter at @rayterrill with any questions or feedback. Cheers.
