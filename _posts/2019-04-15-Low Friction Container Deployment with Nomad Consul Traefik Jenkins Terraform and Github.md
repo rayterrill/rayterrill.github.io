@@ -16,4 +16,4 @@ Things we wanted from the solution:
 * "Dynamic" DNS (no manual DNS changes required to put a solution into PROD).
 
 This is what we came up with.
-[Diagram]({{ site.url }}/assets/ConsulNomadTraefikJenkins.PNG)
+![ConsulNomadTraefikJenkinsDiagram]({{ site.url }}/assets/ConsulNomadTraefikJenkins.PNG)
