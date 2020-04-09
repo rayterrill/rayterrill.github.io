@@ -49,13 +49,13 @@ I had an existing Lambda function that I used for this, but if necessary, build 
 3. Give your Authorizer a name, and configure your Authorizer for AzureAD, then click Create and Attach
     * Identity Source: $request.header.Authorization
     * Issuer: Even though the AWS documentation says this should be coming from the well-known metadata endpoint, which can be found at https://login.microsoftonline.com/<YOUR AZUREAD TENANT GUID>/v2.0/.well-known/openid-configuration, I found that the value here did not match what was in my issued tokens. I had to set the issuer to https://sts.windows.net/<YOUR AZUREAD TENANT GUID>/
-    * Audience: api://<API APP Registration Application/ClientID>, for example api://00000000-0000-0000-0000-000000000000
+    * Audience: api://<API APP Registration Application ID>, for example api://00000000-0000-0000-0000-000000000000
 
 #### Testing with Postman
 
 At this point, you should be able to test your API with Postman. You'll have to obtain an access token good for your API.
 
-I use https://www.npmjs.com/package/react-aad-msal in my React applications, but I ran into an issue where even when I specified the scope for my API Application in my authProvider.js file, the token I was getting was still only good for the MS Graph API. Decoding the Access Token with JWT.io showed an invalid signature - apparently access tokens for MS Graph API include a nonce value that makes the token not validate correctly against the public key (https://github.com/AzureAD/microsoft-authentication-library-for-js/issues/521) - learn something new everyday. Big shout out to Eric Johnson@AWS for helping me track this down.
+I use <https://www.npmjs.com/package/react-aad-msal> in my React applications, but I ran into an issue where even when I specified the scope for my API Application in my authProvider.js file, the token I was getting was still only good for the MS Graph API. Decoding the Access Token with JWT.io showed an invalid signature - apparently access tokens for MS Graph API include a nonce value that makes the token not validate correctly against the public key (<https://github.com/AzureAD/microsoft-authentication-library-for-js/issues/521>) - learn something new everyday. Big shout out to Eric Johnson@AWS for helping me track this down.
 
 I ended up adding some code to my React project to dump an access token to the console, and used react-aad-msal's ability to call into the underlying msal library to make this happen:
 ```
