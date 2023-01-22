@@ -9,8 +9,8 @@ After spending the last several years building things on AWS (mostly using Kuber
 Microsoft has an entire set of training materials focused on the "Azure for AWS professionals" space: <https://learn.microsoft.com/en-us/azure/architecture/aws-professional/>
 
 There are also a number of community docs that have been helpful in navigating AWS vs Azure:
-* https://arsenvlad.medium.com/mapping-aws-iam-concepts-to-similar-ones-in-azure-c31ed7906abb
-* https://cloud.google.com/free/docs/aws-azure-gcp-service-comparison
+* <https://arsenvlad.medium.com/mapping-aws-iam-concepts-to-similar-ones-in-azure-c31ed7906abb>
+* <https://cloud.google.com/free/docs/aws-azure-gcp-service-comparison>
 
 As I continue to dig into Azure, for my own learning I'll be documenting the things that stand out to me as "different" and worth noting coming from an AWS background. This post will likely evolve over time, and this post isn't intended to be all-encompassing - more a running list of things I've found thus far.
 
