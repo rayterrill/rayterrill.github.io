@@ -98,4 +98,4 @@ Things like Azure Storage Firewall to restrict access to storage accounts (this 
 
 ### Wrap-Up
 
-Moving from AWS to Azure has been a journey. I've found it really helpful to have a solid base in another public cloud with which to do comparisons against Azure, and I'm really enjoying learning new things and solving additional puzzles. Onward!
+I've found it really helpful to have a solid base in another public cloud with which to do comparisons against Azure, and I'm really enjoying learning new things and solving additional puzzles. Onward!
