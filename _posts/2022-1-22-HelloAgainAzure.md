@@ -1,6 +1,6 @@
 ---
 title:  "Hello Again, Azure"
-tags: [azure, azuread]
+tags: [azure, azuread, aws]
 lastModified: 2022-1-22
 ---
 
