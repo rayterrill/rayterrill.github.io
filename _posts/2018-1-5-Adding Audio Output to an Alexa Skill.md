@@ -1,9 +1,11 @@
 ---
 title:  "Adding Audio Output to an Alexa Skill"
 tags: [aws]
+excerpt_separator: <!--more-->
 ---
 
 It's pretty easy to add audio to an existing Alexa skill. The biggest trick is probably getting the audio converted into an Alexa-Friendly format. Here's how I did this:
+<!--more-->
 1. Exported my audio from Adobe Premier (or whatever you're using to build your audio files)
 2. Used ffmpeg to convert the audio to the right format:
 ```
