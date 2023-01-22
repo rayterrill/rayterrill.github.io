@@ -4,8 +4,6 @@ tags: [azure, azuread]
 lastModified: 2022-1-22
 ---
 
-### Overview
-
 After spending the last several years building things on AWS (mostly using Kubernetes), I moved to a new spot in September where Azure is the norm. As such, I've been spending time furiously trying to broaden my understanding of the Azure ecosystem and translate many of the concepts with which I'm familiar in AWS into the Azure world. Several years back I used AzureAD at a previous employer, but this is really my first foray into Azure's IAAS/PAAS offerings.
 
 Microsoft has an entire set of training materials focused on the "Azure for AWS professionals" space: <https://learn.microsoft.com/en-us/azure/architecture/aws-professional/>
