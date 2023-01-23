@@ -3,117 +3,63 @@ title:  "AzureAD Cross-Directory App"
 tags: [azure, azuread]
 ---
 
-After multiple years of using AWS for nearly everything, I've moved to a new gig where Azure is the norm. As such, I've been spending time trying to broaden my understanding of the Azure ecosystem and translate many of the concepts with which I'm familiar in AWS into the Azure world.
+As noted in {% post_url 2022-1-23-HelloAgainAzure %}, I've spent the last few years using AWS for nearly everything, 
 
-One of the pieces I "miss" from AWS is AssumeRole - specifically the concept that you can jump around between accounts with ephemeral roles as-needed vs having individualized credentials in each account. The Azure world is very differnt in it's use of Directories, Subscriptions, etc - but I've already encountered a few places where conceptually at least it would be nice to have something similar to the AWS AssumeRole mechanism.
+One of the pieces I "miss" from AWS is AssumeRole - specifically the concept that you can jump around between accounts with ephemeral roles as-needed vs having individualized credentials in each account. Azure really has no equivalent to this functionality, although there are a few pieces you can use to approach some of the functionality.
 
-I found something approaching this with Azure's support for multi-directory applications.
+After digging in a bit, I found Azure supports the ability to have a single identity be usable across directories (and their trusting subscriptions) - one of the major use cases I've used previously with AssumeRole (this could be particularly useful with an infrastructure deployment system like Atlantis where we want to support the ability to deploy changes to resources serviced by multiple directories).
 
 ## Overview
 
-AzureAD supports multitenant applications - that is, applications that can be installed into multiple directories. When the application is installed into directories, a service principal object is created representing that instance of the application in that specific tenant. Microsoft defines this as:
+AzureAD supports multitenant applications - that is, applications that are defined once, and can then be installed into multiple directories. When the application is installed into directories, a service principal object is created representing that instance of the application in that specific tenant. Microsoft defines this as (<https://github.com/MicrosoftDocs/azure-docs/blob/main/articles/active-directory/develop/developer-glossary.md#application-object>):
 
 > The application object defines the application's identity configuration globally (across all tenants where it has access), providing a template from which its corresponding service principal object(s) are derived for use locally at run-time (in a specific tenant).
 
-As a possible solution, we could define an application that represents the workload we'd like to use across multiple directories, then install that into each directory where we need that workload to be able to do work. This would allow us to use service principal authentication to log into each directory, using credentials defined in our "home" directory.
+As a possible solution for this particular use case, we could define an application that represents the workload we'd like to use across multiple directories, then install that into each directory where we need that workload to be able to do work. This would allow us to use service principal authentication to log into each directory, using credentials defined in our "home" directory.
 
 This scenario is illustrated below, where we have a home "Management" directory with a number of subscriptions, as well as a "child" directory with a number of subscriptions.
 
-![AzureADCrossDirectoryApp]({{ site.url }}/assets/cross-directory-app.png)
+![AzureADCrossDirectoryApp]({{ site.url }}/assets/AzureADCrossDirectoryApp_highlevel.png)
 
-1. Register our application in our Home/Management directory. We'll set up a Web Redirect to make things simpler for installing into child tenants, as well as generate a secret for our service principal login.
+1. Register our application in our Home/"Management" directory (at previous employers, we used "Management" accounts to represent a location containing resources meant for use across other managed accounts/directories). We'll set up a Web Redirect to make things simpler for installing into child tenants, as well as generate a secret for our service principal login.
 2. If desired, grant permissions for the service principal in our Home/Management directories to use subscriptions trusted by the Home/Management tenant. This is use-case dependent.
 3. Install our application into our child directories.
 4. If desired, grant permissions for the service principal in our child directories to use subscriptions trusted by the child tenant(s). This is use-case dependent.
 
 ## Configuration
 
-For simplicity's sake, I'll show this in the Azure Portal. Similar configuration could be done with Terraform, PowerShell, Azure CLI, etc.
+For simplicity's sake, I'll show this in the Azure Portal, and I'll assume you're a Global Admin in all tenants. Similar configuration could be done with Terraform, PowerShell, Azure CLI, etc.
 
-1. Log into the Azure Portal
+### Build the MultiTenant Application in the Home/Management Azure Active Directory
 
-This ended up being one of the most difficult parts.
+1. Log into the Azure Portal, and ensure you're logged into the Home/"Management" Azure Active Directory where you want the App Registration to live (you can switch the AAD you're logged into with the Gear icon in the Azure nav bar)
+2. Navigator to Azure Active Directory, App Registrations
+3. Click New Registration
+4. Enter a name for your application (ex: MultiTenant App), and select "Accounts in any organizational directory (Any Azure AD directory - Multitenant)" under "Supported account types". I'm also setting a Redirect URI of type "Web" with a value of "https://portal.azure.com" - this will become useful when installing the app in child directories. Click "Register" to build the app registration. Because we're using the portal, this also does a number of other things for us - the app is installed into our directory as an Enterprise Application/Service Principal, and the "User.Read" Microsoft Graph permission has been added to the app for us. If you use another tool, you'll need to add these yourself. ![AppRegistration]({{ site.url }}/assets/AzureADCrossDirectoryApp_AppRegistration.png). When the app is created, take note of the "Application (client) ID" - this will become our username, as well as the tenant ID for our Home/Management Tenant.
+5. Under our new app registration, navigate to "Certificates & secrets", "Client secrets", and click "New client secret" to generate a secret for our application. Set a name for our secret and pick an expiration if desired (or accept the defaults), then click "Add" to generate the secret. Make sure you store this somewhere safe - once you navigate away from the page, the secret won't be shown again.
+6. (Optional) If you'd like to use this application in your Home/Management directory, you'll need to assign it a subscription. For simplicity's sake, I'll assign "Contributor" access to my subscription (Navigate to the subscription, "Access control (IAM)", "Role assignments", and assign the "Contributor" role to the subscription) ![SubscriptionRole]({{ site.url }}/assets/AzureADCrossDirectoryApp_SubscriptionRoleMGMT.png)
 
-#### Create an App Registration for your API
+At this point, we should be able to test login using the Azure CLI to our Home/Management directory with our service principal.
 
-1. Create a new application in the Application Registrations section of AzureAD
-2. Add any permissions your API might need in the API Permissions tab
-3. Go to the Expose an API tab, and click Add a Scope
-    * Give your scope a name, admin consent name and description, and click Add Scope.
-4. Once your app registration has been configured - take note of the Application/Client ID and Scope name you created above - you'll need these for the API Gateway configuration
-    
-#### Modify your Application Registration to Grant Access to the API
+1. Validate that we're not logged in currently at the CLI (if you need to log out, you can use `az logout`): ![NoLogin]({{ site.url }}/assets/AzureADCrossDirectoryApp_NoLogin.png)
+2. Log in to the Azure CLI with our service principal: `az login --service-principal --username [Application (client) ID from above] --tenant [Tenant ID for our Home/Management tenant]`. You'll be prompted for the password. If everything worked correctly, you'll be logged in successfully. Depending on what permissions you've assigned to the application, you should also be able to perform operations as this service principal. ![LoginMGMT]({{ site.url }}/assets/AzureADCrossDirectoryApp_LoginMGMT.png).
 
-1. Location your application in the Application Registrations section of AzureAD
-2. Under API Permissions, click Add a Permission
-3. Under either My APIs or APIs My Organization Uses, find the App Registration created for the API in the above section, check the box to add the scope, and click Add Permissions. If you marked Admin Consent as required, click the Grant admin consent button or get a Global Admin to perform the consent process to grant the necessary permissions.
+### Install the MultiTenant Application into Child Azure Active Directories
 
-At this point, your application should be able to request a token to call the AzureAD API.
+Now that you've validated that your application works as expected in the Home/Management directory, lets install it into another Azure Active Directory.
 
-### AWS Configuration
+1. Open `https://login.microsoftonline.com/[Child Tenant ID]/oauth2/authorize?client_id=[Application (client) ID from above]&response_type=code&redirect_uri=https://portal.azure.com` in the browser, substituting in the Tenant ID of the child Azure Active Directory tenant as "Child Tenant ID", as well as the App Registration's "Application (client) ID" as "Application (client) ID". You'll be presented with a Consent prompt to install the application into the target directory. Check the box to consent on behalf of the org, and click "Accept" to install the app into the directory. ![Consent]({{ site.url }}/assets/AzureADCrossDirectoryApp_InstallConsent.png)
+2. Once the app is installed, give the application access to a subscription trusted by the Azure Active Directory. For simplicity's sake, I'll assign "Contributor" access to my subscription (Navigate to the subscription, "Access control (IAM)", "Role assignments", and assign the "Contributor" role to the subscription) ![SubscriptionRole]({{ site.url }}/assets/AzureADCrossDirectoryApp_SubscriptionRoleDEV.png)
 
-#### Build your Lambda Function
+At this point, we should be able to test login using the Azure CLI to our child directory with our service principal.
 
-I had an existing Lambda function that I used for this, but if necessary, build a Lambda function and ensure it works and returns something to the caller so you're able to test things out.
+1. Validate that we're not logged in currently at the CLI (if you need to log out, you can use `az logout`): ![NoLogin]({{ site.url }}/assets/AzureADCrossDirectoryApp_NoLogin.png)
+2. Log in to the Azure CLI with our service principal: `az login --service-principal --username [Application (client) ID from above] --tenant [Tenant ID for our child tenant]`. You'll be prompted for the password. If everything worked correctly, you'll be logged in successfully. Depending on what permissions you've assigned to the application, you should also be able to perform operations as this service principal. ![LoginDEV]({{ site.url }}/assets/AzureADCrossDirectoryApp_LoginDEV.png).
 
-#### Build the API Gateway v2 Configuration
+Rinse/Repeat on any additional Directories as needed.
 
-1. In API Gateway, click APIs on the left nav, and then Create API
-2. Click the Build button under HTTP API
-3. On the Create an API screen, click Add Integration, choose Lambda, and pick the correct Region, as well as your Lambda function. Enter a name for your API, then click Next to continue
-4. I set my resource path to / for simplicity, but by default it appears to choose the Lambda function's name. Whatever you choose is fine, you'll just need to remember this to test things out with your client. Click Next to continue.
-5. Leave the Configure Stages section alone (configured for Auto-deploy), and click Next to continue.
-6. Click Create to create the API Gateway configuration
+### Wrap-Up
 
-#### Build your JWT Authorizer
+This works, but it's both significantly more complicated than similar functionality in AWS, as well as less flexible.
 
-1. Once your API Gateway configuration has been created, click Authorization in the left nav
-2. Click the VERB for your newly created route - by default it should be ANY - and then click the button for Create an attach an authorizer
-3. Give your Authorizer a name, and configure your Authorizer for AzureAD, then click Create and Attach
-    * Identity Source: $request.header.Authorization
-    * Issuer: Even though the AWS documentation says this should be coming from the well-known metadata endpoint, which can be found at https://login.microsoftonline.com/<YOUR AZUREAD TENANT GUID>/v2.0/.well-known/openid-configuration, I found that the value here did not match what was in my issued tokens. I had to set the issuer to https://sts.windows.net/<YOUR AZUREAD TENANT GUID>/
-    * Audience: api://<API APP Registration Application ID>, for example api://00000000-0000-0000-0000-000000000000
-
-#### Testing with Postman
-
-At this point, you should be able to test your API with Postman. You'll have to obtain an access token good for your API.
-
-I use <https://www.npmjs.com/package/react-aad-msal> in my React applications, but I ran into an issue where even when I specified the scope for my API Application in my authProvider.js file, the token I was getting was still only good for the MS Graph API. Decoding the Access Token with JWT.io showed an invalid signature - apparently access tokens for MS Graph API include a nonce value that makes the token not validate correctly against the public key (<https://github.com/AzureAD/microsoft-authentication-library-for-js/issues/521>) - learn something new everyday. Big shout out to Eric Johnson@AWS for helping me track this down.
-
-I ended up adding some code to my React project to dump an access token to the console, and used react-aad-msal's ability to call into the underlying msal library to make this happen:
-```
-var tokenRequest = {
-  scopes: ["api://<MY API's APP REGISRATION/CLIENTID>/<MY API's SCOPE>"]
-};
-
-//call in and get a token for our api
-let token = await props.provider.acquireTokenSilent(tokenRequest)
-console.log(token.accessToken);
-```
-
-Once you have an access token valid for your API (you can pretty easily decode and check this with jwt.io), you should be able to use Postman to access the API - just set the Authorization to Bearer token and paste your access token into the token section.
-
-#### Adding CORS Support
-
-To be able to use this in a browser-based app which was my goal, there's some additional configuration required.
-
-1. In API Gateway, click CORS in the left-hand nav, configure the following settings, then click Save to save your settings.
-    * Access-Control-Allow-Origin: Enter any origins which will need access to the API
-    * Access-Control-Allow-Headers: Add the authorization header
-    * Access-Control-Allow-Methods: Add GET as an allowed method
-  
-This should allow you to access the API from the browser using CORS with something like:
-```
-let response = await fetch("https://YOURAPI.execute-api.us-west-2.amazonaws.com", {
-  method: 'GET',
-  headers: {
-  'Authorization': 'Bearer ' + token.accessToken
-  },
-});
-
-var data = await response.json();
-```
-
-HUZZAH!
-
-This vastly simplified API Gateway v2 is really a gamechanger for us - the previous API Gateway worked well, but it was WAYYYY too complicated. And the ability to do JWT auth easily like this - beautiful. Well done AWS.
+Ideally, I'd like to see this kind of functionality supported by Azure Managed Identites, but that's currently not possible <https://learn.microsoft.com/en-us/azure/active-directory/managed-identities-azure-resources/managed-identities-faq#can-i-use-a-managed-identity-to-access-a-resource-in-a-different-directorytenant>. Having cross-directory functionality supported by user-assigned managed identities would be a big win.

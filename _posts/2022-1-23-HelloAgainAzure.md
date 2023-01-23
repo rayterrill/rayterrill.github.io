@@ -1,10 +1,10 @@
 ---
 title:  "Hello Again, Azure"
 tags: [azure, azuread, aws]
-lastModified: 2022-1-22
+lastModified: 2022-1-23
 ---
 
-After spending the last several years building things on AWS (mostly using Kubernetes), I moved to a new spot in September where Azure is the norm. As such, I've been spending time furiously trying to broaden my understanding of the Azure ecosystem and translate many of the concepts with which I'm familiar in AWS into the Azure world. Several years back I used AzureAD at a previous employer, but this is really my first foray into Azure's IAAS/PAAS offerings. Since I'm exploring and learning something new, I'm picking this blog back up that I'd abandoned over the past few years.
+After spending the last several years building things on AWS (mostly using Kubernetes), I moved to a new spot in September where Azure is the norm. As such, I've been spending time furiously trying to broaden my understanding of the Azure ecosystem and translate many of the concepts with which I'm familiar in AWS into the Azure world. Several years back I used AzureAD at a previous employer, but this is really my first foray into Azure's IAAS/PAAS offerings. I've found there's a ton of material out there about AWS, it felt unnecessary or like adding to the noise to blog about things in that space. It seems like comparatively much less is written about Azure. Since I'm exploring and learning something new, I wanted to share as I’m learning in the hopes that it helps others learn as I’ve learned from so many, and as such I'm picking this blog back up that I'd set aside the past few years.
 
 Microsoft has an entire set of training materials focused on the "Azure for AWS professionals" space: <https://learn.microsoft.com/en-us/azure/architecture/aws-professional/>
 
