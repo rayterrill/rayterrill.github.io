@@ -11,9 +11,11 @@ After digging in a bit, I found Azure supports the ability to have a single iden
 
 ## Overview
 
-AzureAD supports multitenant applications - that is, applications that are defined once, and can then be installed into multiple directories. When the application is installed into directories, a service principal object is created representing that instance of the application in that specific tenant. Microsoft defines this as (<https://github.com/MicrosoftDocs/azure-docs/blob/main/articles/active-directory/develop/developer-glossary.md#application-object>):
+AzureAD supports multitenant applications - that is, applications that are defined once, and can then be installed into multiple directories. When the application is installed into directories, a service principal object is created representing that instance of the application in that specific tenant. Microsoft defines this as:
 
 > The application object defines the application's identity configuration globally (across all tenants where it has access), providing a template from which its corresponding service principal object(s) are derived for use locally at run-time (in a specific tenant).
+
+Ref: <https://github.com/MicrosoftDocs/azure-docs/blob/main/articles/active-directory/develop/developer-glossary.md#application-object>
 
 As a possible solution for this particular use case, we could define an application that represents the workload we'd like to use across multiple directories, then install that into each directory where we need that workload to be able to do work. This would allow us to use service principal authentication to log into each directory, using credentials defined in our "home" directory.
 
@@ -21,10 +23,10 @@ This scenario is illustrated below, where we have a home "Management" directory 
 
 ![AzureADCrossDirectoryApp]({{ site.url }}/assets/AzureADCrossDirectoryApp_highlevel.png)
 
-1. Register our application in our Home/"Management" directory (at previous employers, we used "Management" accounts to represent a location containing resources meant for use across other managed accounts/directories). We'll set up a Web Redirect to make things simpler for installing into child tenants, as well as generate a secret for our service principal login.
-2. If desired, grant permissions for the service principal in our Home/Management directories to use subscriptions trusted by the Home/Management tenant. This is use-case dependent.
+1. Register our application in our Home/"Management" directory (at previous employers, we used "Management" accounts to represent a location containing resources meant for use across other managed accounts/directories).
+2. (Optional) If desired, grant permissions for the service principal in our Home/Management directories to use subscriptions trusted by the Home/Management tenant. This is use-case dependent.
 3. Install our application into our child directories.
-4. If desired, grant permissions for the service principal in our child directories to use subscriptions trusted by the child tenant(s). This is use-case dependent.
+4. Grant permissions for the service principal in our child directories to use subscriptions trusted by the child tenant(s).
 
 ## Configuration
 
@@ -32,12 +34,14 @@ For simplicity's sake, I'll show this in the Azure Portal, and I'll assume you'r
 
 ### Build the MultiTenant Application in the Home/Management Azure Active Directory
 
-1. Log into the Azure Portal, and ensure you're logged into the Home/"Management" Azure Active Directory where you want the App Registration to live (you can switch the AAD you're logged into with the Gear icon in the Azure nav bar)
+1. Log into the Azure Portal, and ensure you're logged into the Home/"Management" Azure Active Directory where you want the App Registration to live (you can switch directories with the Gear icon in the Azure nav bar)
 2. Navigator to Azure Active Directory, App Registrations
 3. Click New Registration
-4. Enter a name for your application (ex: MultiTenant App), and select "Accounts in any organizational directory (Any Azure AD directory - Multitenant)" under "Supported account types". I'm also setting a Redirect URI of type "Web" with a value of "https://portal.azure.com" - this will become useful when installing the app in child directories. Click "Register" to build the app registration. Because we're using the portal, this also does a number of other things for us - the app is installed into our directory as an Enterprise Application/Service Principal, and the "User.Read" Microsoft Graph permission has been added to the app for us. If you use another tool, you'll need to add these yourself. ![AppRegistration]({{ site.url }}/assets/AzureADCrossDirectoryApp_AppRegistration.png). When the app is created, take note of the "Application (client) ID" - this will become our username, as well as the tenant ID for our Home/Management Tenant.
-5. Under our new app registration, navigate to "Certificates & secrets", "Client secrets", and click "New client secret" to generate a secret for our application. Set a name for our secret and pick an expiration if desired (or accept the defaults), then click "Add" to generate the secret. Make sure you store this somewhere safe - once you navigate away from the page, the secret won't be shown again.
-6. (Optional) If you'd like to use this application in your Home/Management directory, you'll need to assign it a subscription. For simplicity's sake, I'll assign "Contributor" access to my subscription (Navigate to the subscription, "Access control (IAM)", "Role assignments", and assign the "Contributor" role to the subscription) ![SubscriptionRole]({{ site.url }}/assets/AzureADCrossDirectoryApp_SubscriptionRoleMGMT.png)
+4. Enter a name for your application (ex: MultiTenant App), and select "Accounts in any organizational directory (Any Azure AD directory - Multitenant)" under "Supported account types". I'm also setting a Redirect URI of type "Web" with a value of "https://portal.azure.com" - this will become useful when installing the app in child directories.
+5. Click "Register" to build the app registration. Because we're using the portal, this also does a number of other things for us - the app is installed into our directory as an Enterprise Application/Service Principal, and the "User.Read" Microsoft Graph permission has been added to the app for us. If you use another tool, you'll need to add these yourself. ![AppRegistration]({{ site.url }}/assets/AzureADCrossDirectoryApp_AppRegistration.png)
+6. Once the app is created, take note of the "Application (client) ID" - this will become our username, as well as the tenant ID for our Home/Management Tenant.
+7. Under our new app registration, navigate to "Certificates & secrets", "Client secrets", and click "New client secret" to generate a secret for our application. Set a name for our secret and pick an expiration if desired (or accept the defaults), then click "Add" to generate the secret. Make sure you store this somewhere safe - once you navigate away from the page, the secret won't be shown again.
+8. (Optional) If you'd like to use this application in your Home/Management directory, you'll need to assign it a subscription. For simplicity's sake, I'll assign "Contributor" access to my subscription (Navigate to the subscription, "Access control (IAM)", "Role assignments", and assign the "Contributor" role to the subscription) ![SubscriptionRole]({{ site.url }}/assets/AzureADCrossDirectoryApp_SubscriptionRoleMGMT.png)
 
 At this point, we should be able to test login using the Azure CLI to our Home/Management directory with our service principal.
 
