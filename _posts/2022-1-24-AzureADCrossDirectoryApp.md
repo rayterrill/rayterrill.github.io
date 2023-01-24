@@ -5,7 +5,7 @@ tags: [azure, azuread]
 
 As noted in <{% post_url 2022-1-23-HelloAgainAzure %}>, I've spent the last few years using AWS for nearly everything, 
 
-One of the pieces I "miss" from AWS is AssumeRole - specifically the concept that you can jump around between accounts with ephemeral roles as-needed vs having individualized credentials in each account. Azure really has no equivalent to this functionality, although there are a few pieces you can use to approach some of the functionality.
+One of the pieces I "miss" from AWS is AssumeRole - specifically the concept that you can jump around between accounts with ephemeral roles as-needed vs having individualized credentials in each account. Azure appears to really has no equivalent to this functionality, although there are a few pieces you can use to approach some of this.
 
 After digging in a bit, I found Azure supports the ability to have a single identity be usable across directories (and their trusting subscriptions) - one of the major use cases I've used previously with AssumeRole (this could be particularly useful with an infrastructure deployment system like Atlantis where we want to support the ability to deploy changes to resources serviced by multiple directories).
 
