@@ -168,3 +168,7 @@ module "groupmember" {
   group = each.value.group
 }
 ```
+
+### Stuff I Haven't Used Yet
+
+* [setproduct](https://developer.hashicorp.com/terraform/language/functions/setproduct#finding-combinations-for-for_each) looks pretty promising!
