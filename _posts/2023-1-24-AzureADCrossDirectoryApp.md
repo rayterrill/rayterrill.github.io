@@ -3,7 +3,7 @@ title:  "AzureAD Cross-Directory App"
 tags: [azure, azuread]
 ---
 
-As noted in [HelloAgainAzure]({{ site.url }}{% post_url 2022-1-23-HelloAgainAzure %}), I've spent the last few years using AWS for nearly everything, 
+As noted in [HelloAgainAzure]({{ site.url }}{% post_url 2023-1-23-HelloAgainAzure %}), I've spent the last few years using AWS for nearly everything, 
 
 One of the pieces I "miss" from AWS is AssumeRole - specifically the concept that you can jump around between accounts with ephemeral roles as-needed vs having individualized credentials in each account. Azure appears to really has no equivalent to this functionality, although there are a few pieces you can use to approach some of this.
 
